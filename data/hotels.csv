@@ -1,0 +1,9 @@
+hotel_id,hotel_name,stars,country
+H001,GlobalStay Barcelona Central,4,XX
+H002,GlobalStay Barcelona Airport,4,IT
+H003,GlobalStay Paris Central,3,IT
+H004,GlobalStay Berlin Downtown,3,IT
+H005,GlobalStay Milan Downtown,4,IT
+H006,GlobalStay Milan Airport,4,IT
+H007,GlobalStay Paris Downtown,3,FR
+H008,GlobalStay Milan Airport,5,ES

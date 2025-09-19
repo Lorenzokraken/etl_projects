@@ -1,0 +1,5 @@
+hotels.csv: Columns are hotel_id, hotel_name, stars, country. Example: H001,GlobalStay Barcelona Central,4,XX
+customers.csv: Columns are customer_id, first_name, last_name, email, country, gdpr_optin. Example: C00001,Luca,Smith,,ES,0
+rooms.csv: Columns are room_id, hotel_id, room_type_code, room_type_desc, max_occupancy. Example: H001-R001,H001,DLX,Deluxe,3
+bookings.csv: Columns are booking_id, customer_id, hotel_id, room_id, created_at, checkin_date, checkout_date, nights, currency, total_amount, status, source. Example: B000001,C00192,H001,H001-R005,2025-03-10,2025-03-27,2025-04-01,5,USD,967.95,cancelled,walk_in
+payments.csv: Columns are payment_id, booking_id, provider, status, amount, currency, transaction_date. Example: P442GX5C9A,B001638,adyen,refunded,1104.52,EUR,2025-01-22

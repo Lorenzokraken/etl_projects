@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Gold Layer & ML - GlobalStay Hotels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .hover-card:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .hover-card:hover .info {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        .info {
+            opacity: 0;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-gray-800 text-white py-6 shadow-md">
+        <h1 class="text-3xl font-bold text-center">Dashboard Gold Layer & Machine Learning</h1>
+        <p class="text-center text-gray-300">GlobalStay Hotels – Analisi KPI, Previsioni e Insight</p>
+    </header>
+    <div class="container mx-auto p-6">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-4 text-center hover-card">
+                <div class="text-gray-500 text-sm">Tasso di Cancellazione</div>
+                <div class="text-2xl font-bold text-teal-600" id="cancellation-rate">8.2%</div>
+                <div class="info">Monitorare i picchi stagionali per ridurre ulteriormente il tasso.</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 text-center hover-card">
+                <div class="text-gray-500 text-sm">Tasso di Riscossione</div>
+                <div class="text-2xl font-bold text-teal-600" id="collection-rate">91.5%</div>
+                <div class="info">Un tasso elevato indica una buona gestione dei pagamenti.</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 text-center hover-card">
+                <div class="text-gray-500 text-sm">Valore Medio Cliente</div>
+                <div class="text-2xl font-bold text-teal-600" id="customer-value">€ 1.240</div>
+                <div class="info">Indica il valore generato per cliente: ottimizzare per aumentarlo.</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 text-center hover-card">
+                <div class="text-gray-500 text-sm">Revenue Giornaliera</div>
+                <div class="text-2xl font-bold text-teal-600" id="daily-revenue">€ 8.900</div>
+                <div class="info">La revenue giornaliera è stabile, ma può crescere con promozioni mirate.</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 text-center hover-card">
+                <div class="text-gray-500 text-sm">Alert Overbooking</div>
+                <div class="text-2xl font-bold text-teal-600" id="overbooking-alerts">3</div>
+                <div class="info">Ridurre gli alert con una gestione più accurata delle prenotazioni.</div>
+            </div>
+        </section>
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 hover-card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Distribuzione Prezzi Prenotazioni</h2>
+                <p class="text-gray-600 mb-4">La distribuzione dei prezzi mostra una concentrazione nella fascia 100-300€, suggerendo opportunità di upselling per fasce superiori.</p>
+                <canvas id="priceDistChart" class="w-full h-64"></canvas>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 hover-card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Relazione Notti vs Prezzo</h2>
+                <p class="text-gray-600 mb-4">La relazione tra notti e prezzo evidenzia che soggiorni più lunghi portano a un aumento proporzionale del prezzo.</p>
+                <canvas id="nightsVsPriceChart" class="w-full h-64"></canvas>
+            </div>
+        </section>
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 hover-card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Andamento Mensile delle Prenotazioni</h2>
+                <p class="text-gray-600 mb-4">L'andamento mensile evidenzia picchi stagionali che possono essere sfruttati per campagne promozionali mirate.</p>
+                <canvas id="monthlyTrendChart" class="w-full h-64"></canvas>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 hover-card">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Distribuzione Tipologie di Camere</h2>
+                <p class="text-gray-600 mb-4">La distribuzione delle tipologie di camere prenotate offre insight utili per ottimizzare l'offerta e la disponibilità.</p>
+                <canvas id="roomTypeChart" class="w-full h-64"></canvas>
+            </div>
+        </section>
+        <section class="bg-white rounded-lg shadow p-6 mb-8 hover-card">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Previsione ML: Prezzo Prenotazione</h2>
+            <p class="text-gray-600 mb-4">Il modello Random Forest prevede il prezzo totale di una prenotazione in base a durata, tipologia camera, periodo e occupazione.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <strong>Errore Quadrato Medio (MSE):</strong> <span id="mse">1.250</span><br>
+                    <strong>R-quadro (R²):</strong> <span id="r2">0.89</span>
+                </div>
+                <div>
+                    <canvas id="mlPredChart" class="w-full h-64"></canvas>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Insight & Raccomandazioni</h2>
+            <ul class="list-disc list-inside text-gray-600">
+                <li>La durata del soggiorno e il periodo dell’anno influenzano fortemente il prezzo.</li>
+                <li>Il tasso di cancellazione è sotto controllo, ma monitorare i picchi stagionali.</li>
+                <li>Il modello ML può supportare strategie di pricing dinamico.</li>
+                <li>Attenzione agli alert di overbooking: suggerita revisione delle policy di prenotazione.</li>
+            </ul>
+        </section>
+    </div>
+    <footer class="text-center text-gray-500 text-sm py-4">
+        &copy; 2025 GlobalStay Hotels – Progetto Data Engineering | Dashboard generata con TailwindCSS
+    </footer>
+    <script>
+        // Chart.js - Distribuzione Prezzi Prenotazioni
+        const priceDistCtx = document.getElementById('priceDistChart').getContext('2d');
+        new Chart(priceDistCtx, {
+            type: 'bar',
+            data: {
+                labels: ['0-100', '100-200', '200-300', '300-400', '400-500', '500+'],
+                datasets: [{
+                    label: 'Numero Prenotazioni',
+                    data: [12, 28, 34, 21, 9, 4],
+                    backgroundColor: '#0e7490',
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { x: { title: { display: true, text: 'Fascia Prezzo (€)' } }, y: { title: { display: true, text: 'Prenotazioni' } } }
+            }
+        });
+        // Chart.js - Relazione Notti vs Prezzo
+        const nightsVsPriceCtx = document.getElementById('nightsVsPriceChart').getContext('2d');
+        new Chart(nightsVsPriceCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Prenotazione',
+                    data: [
+                        {x:1, y:80}, {x:2, y:160}, {x:3, y:210}, {x:4, y:320}, {x:5, y:400}, {x:7, y:520}, {x:10, y:800}
+                    ],
+                    backgroundColor: '#1e293b',
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { x: { title: { display: true, text: 'Notti' } }, y: { title: { display: true, text: 'Prezzo (€)' } } }
+            }
+        });
+        // Chart.js - Andamento Mensile delle Prenotazioni
+        const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+        new Chart(monthlyTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Prenotazioni',
+                    data: [50, 60, 70, 90, 120, 150, 200, 220, 180, 140, 100, 80],
+                    borderColor: '#0e7490',
+                    backgroundColor: 'rgba(14,116,144,0.1)',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                plugins: { legend: { position: 'bottom' } },
+                scales: { x: { title: { display: true, text: 'Mese' } }, y: { title: { display: true, text: 'Prenotazioni' } } }
+            }
+        });
+        // Chart.js - Distribuzione Tipologie di Camere
+        const roomTypeCtx = document.getElementById('roomTypeChart').getContext('2d');
+        new Chart(roomTypeCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Singola', 'Doppia', 'Suite', 'Familiare'],
+                datasets: [{
+                    label: 'Tipologie di Camere',
+                    data: [30, 50, 15, 5],
+                    backgroundColor: ['#0e7490', '#1e293b', '#f59e42', '#10b981'],
+                }]
+            },
+            options: {
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+        // Chart.js - ML Prediction: Prezzo vs Predetto
+        const mlPredCtx = document.getElementById('mlPredChart').getContext('2d');
+        new Chart(mlPredCtx, {
+            type: 'line',
+            data: {
+                labels: ['Pren1','Pren2','Pren3','Pren4','Pren5','Pren6','Pren7','Pren8','Pren9','Pren10'],
+                datasets: [
+                    {
+                        label: 'Prezzo Reale',
+                        data: [120, 200, 320, 400, 250, 180, 500, 350, 420, 300],
+                        borderColor: '#0e7490',
+                        backgroundColor: 'rgba(14,116,144,0.1)',
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Prezzo Predetto',
+                        data: [130, 210, 310, 390, 260, 170, 480, 340, 410, 310],
+                        borderColor: '#f59e42',
+                        backgroundColor: 'rgba(245,158,66,0.1)',
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                plugins: { legend: { position: 'bottom' } },
+                scales: { x: { title: { display: true, text: 'Prenotazione' } }, y: { title: { display: true, text: 'Prezzo (€)' } } }
+            }
+        });
+    </script>
+</body>
+</html>
