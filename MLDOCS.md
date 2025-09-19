@@ -1,8 +1,3 @@
-
-
-
-
-
 ## Piano ML - Regressione Prezzo Prenotazione
 
 ### Step 1: Feature Engineering

@@ -63,7 +63,7 @@
 - <span style="color:#0074D9; font-weight:bold;">💻 <b>PC Locale</b></span>: punto di partenza, CSV originali
 - <span style="color:#FF851B; font-weight:bold;">🛠️ <b>Airflow</b></span>: orchestratore ETL (bronze → silver → gold)
 - <span style="color:#2ECC40; font-weight:bold;">☁️ <b>S3 bucket</b></span>: storage dati bronze/silver/gold
-- <b>[Gold]*</b>: output gold usato come input per Databricks/ML
+- <b>🥇*</b>: output gold usato come input per Databricks/ML
 - <span style="color:#B10DC9; font-weight:bold;">🔮 <b>Databricks</b></span>: training e serving modello ML sui dati gold
 ---
 
@@ -161,6 +161,8 @@ df_ml = bookings.merge(rooms, on='room_id', how='left')
 df_ml['nights'] = (pd.to_datetime(df_ml['checkout_date']) - pd.to_datetime(df_ml['checkin_date'])).dt.days
 # ...feature engineering, training, predizione...
 ```
+
+
 **Dashboard Finale:**
 dashboard/index.html
 ---
